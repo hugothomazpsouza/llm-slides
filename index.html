@@ -158,7 +158,7 @@
           <p class="muted reveal">Baseado nos Capítulos 1, 2 e 3 de <em>“Hands-On Large Language Models”</em></p>
 
           <ol class="agenda reveal">
-            <li><span class="agenda-num">01</span><span><strong>Introdução aos LLMs</strong><small>Evolução · Representação vs. Gerativos</small></span></li>
+            <li><span class="agenda-num">01</span><span><strong>Introdução aos LLMs</strong><small>Evolução · Representação vs. Generativos</small></span></li>
             <li><span class="agenda-num">02</span><span><strong>Tokens &amp; Embeddings</strong><small>Tokenização · Espaço vetorial</small></span></li>
             <li><span class="agenda-num">03</span><span><strong>Por Dentro do Transformer</strong><small>Atenção · FFN · Otimizações</small></span></li>
           </ol>
@@ -228,6 +228,7 @@
                      data-label="Figure 1-2 · Tarefas da Language AI" decoding="async" />
               </div>
               <figcaption><em>Figure 1-2.</em> Language AI is capable of many tasks by processing textual input.</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Cap. 1.</span>
             </figure>
           </div>
         </div>
@@ -284,6 +285,7 @@
                      data-label="Linha do tempo do NLP" decoding="async" />
               </div>
               <figcaption>Linha do tempo do NLP — da contagem de palavras aos LLMs</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Cap. 1.</span>
             </figure>
 
             <div class="card card--warn reveal">
@@ -299,13 +301,13 @@
     </section>
 
     <!-- =========================================================
-         SLIDE 4 — CAP. 1: REPRESENTAÇÃO VS. GERATIVOS
+         SLIDE 4 — CAP. 1: REPRESENTAÇÃO VS. GENERATIVOS
     ========================================================== -->
-    <section class="slide" data-title="Representação vs. Gerativos" aria-roledescription="slide">
+    <section class="slide" data-title="Representação vs. Generativos" aria-roledescription="slide">
       <div class="slide-inner">
         <header class="slide-header reveal">
           <span class="eyebrow"><span class="pill">Capítulo 1</span> Introdução aos LLMs</span>
-          <h2>Modelos de Representação <span class="vs-inline">vs.</span> Gerativos</h2>
+          <h2>Modelos de Representação <span class="vs-inline">vs.</span> Generativos</h2>
         </header>
 
         <div class="slide-body grid-compare-v2">
@@ -332,6 +334,7 @@
                      data-label="Arquitetura Encoder" decoding="async" />
               </div>
               <figcaption>Encoder — atenção bidirecional &amp; embeddings</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Cap. 1.</span>
             </figure>
           </div>
 
@@ -342,12 +345,12 @@
             <span class="divider-line"></span>
           </div>
 
-          <!-- Coluna 2: Gerativos (Card + Imagem) -->
+          <!-- Coluna 2: Generativos (Card + Imagem) -->
           <div class="compare-col reveal">
             <article class="card card--accent-violet compare-card">
               <header class="compare-head">
                 <span class="tag">Decoder-only</span>
-                <h3>Modelos Gerativos</h3>
+                <h3>Modelos Generativos</h3>
                 <p class="muted">ex.: <strong>GPT</strong>, Llama</p>
                 <div class="mask-wrap" aria-hidden="true"><div class="mask mask--causal" data-mask="causal"></div><small>causal</small></div>
               </header>
@@ -365,6 +368,7 @@
                      data-label="Arquitetura Decoder" decoding="async" />
               </div>
               <figcaption>Decoder — atenção causal &amp; geração autorregressiva</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Cap. 1.</span>
             </figure>
           </div>
         </div>
@@ -434,6 +438,7 @@
                      data-label="Texto → Tokens → IDs" decoding="async" />
               </div>
               <figcaption>Do texto aos tokens e seus IDs no vocabulário</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Cap. 2.</span>
             </figure>
 
             <div class="card card--warn reveal">
@@ -443,6 +448,74 @@
                 <li>Multilingualidade ineficiente: vocabulários centrados no inglês.</li>
                 <li>Textos não-ingleses geram <strong>mais tokens</strong> → sequências maiores e mais caras.</li>
               </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE — CAP. 2: TOKENIZADORES DIFERENTES (demo ilustrativa) -->
+    <section class="slide" data-title="Tokenizadores Diferentes" aria-roledescription="slide">
+      <div class="slide-inner">
+        <header class="slide-header reveal">
+          <span class="eyebrow"><span class="pill pill--cyan">Capítulo 2</span> Tokens &amp; Embeddings</span>
+          <h2>Tokenizadores Diferentes, Tokens Diferentes</h2>
+        </header>
+
+        <div class="slide-body tkc reveal">
+          <p class="tok-note">Exemplo ilustrativo: as divisões abaixo não são a saída de tokenizadores reais.</p>
+          <div class="seg-tabs" role="group" aria-label="Escolha o texto de exemplo">
+            <button type="button" class="seg-tab is-active" data-sample="code" aria-pressed="true">Código Python</button>
+            <button type="button" class="seg-tab" data-sample="text" aria-pressed="false">Texto técnico (PT)</button>
+            <button type="button" class="seg-tab" data-sample="num" aria-pressed="false">Números e emoji</button>
+          </div>
+          <pre class="tkc-input" id="tkc-input"></pre>
+          <div class="tkc-rows" id="tkc-rows"></div>
+          <p class="tkc-takeaway" id="tkc-takeaway" aria-live="polite"></p>
+          <p class="footnote">· = espaço · ⏎ = quebra de linha · ∅ = informação perdida</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE — CAP. 2: POR QUE O TOKENIZADOR IMPORTA -->
+    <section class="slide" data-title="Por que o Tokenizador Importa" aria-roledescription="slide">
+      <div class="slide-inner">
+        <header class="slide-header reveal">
+          <span class="eyebrow"><span class="pill pill--cyan">Capítulo 2</span> Tokens &amp; Embeddings</span>
+          <h2>Por que o Tokenizador Importa para a Qualidade</h2>
+        </header>
+
+        <div class="slide-body grid-2 grid-2--wide-left">
+          <div class="card card--accent-violet reveal">
+            <h3 class="card-title"><span class="dot dot--violet"></span>O que diferencia um tokenizador</h3>
+            <ul class="points">
+              <li><strong>Método:</strong> BPE, WordPiece, SentencePiece…</li>
+              <li><strong>Tamanho do vocabulário:</strong> quantos pedaços ele conhece.</li>
+              <li><strong>Caixa:</strong> maiúsculas e minúsculas são o mesmo token ou não.</li>
+              <li><strong>Espaços e indentação:</strong> ignorados, separados ou agrupados.</li>
+              <li><strong>Números, emoji e símbolos:</strong> dígitos soltos, bytes ou <code>[UNK]</code>.</li>
+              <li><strong>Tokens especiais:</strong> <code>[CLS]</code>, <code>[SEP]</code>, <code>&lt;|endoftext|&gt;</code>…</li>
+              <li><strong>Dados de treino do tokenizador:</strong> texto geral, código, ciência…</li>
+            </ul>
+            <p class="footnote">O tokenizador é treinado antes do modelo, e o modelo só enxerga o que ele entrega.</p>
+          </div>
+
+          <div class="tkw-grid">
+            <div class="mini-card is-featured reveal">
+              <span class="mini-label">Código</span>
+              <p>Palavras-chave e indentação como <strong>tokens únicos</strong> preservam a estrutura e fazem caber mais código na janela de contexto.</p>
+            </div>
+            <div class="mini-card reveal">
+              <span class="mini-label">Custo e contexto</span>
+              <p>Mais tokens para o mesmo texto = <strong>mais custo</strong> e menos conteúdo na janela de contexto.</p>
+            </div>
+            <div class="mini-card reveal">
+              <span class="mini-label">Números</span>
+              <p>Dígitos quebrados em pedaços podem <strong>dificultar</strong> tarefas com valores, como comparar com um limiar.</p>
+            </div>
+            <div class="mini-card reveal">
+              <span class="mini-label">Idioma e domínio</span>
+              <p>Termos como <strong>xApp, RIC e gNB</strong> podem virar vários tokens se o vocabulário não os conhece.</p>
             </div>
           </div>
         </div>
@@ -470,10 +543,6 @@
                 <span class="emb-vec-word">“rei”</span>
                 <span class="emb-vec-arrow">→</span>
                 <code>[ 0.21, −0.53, 0.88, …, 0.07 ]</code>
-              </div>
-
-              <div class="analogy" aria-label="Analogia vetorial: rei menos homem mais mulher é aproximadamente rainha">
-                <span>rei</span><span class="op">−</span><span>homem</span><span class="op">+</span><span>mulher</span><span class="op">≈</span><span class="result">rainha</span>
               </div>
 
               <figure class="emb-plot-wrap">
@@ -533,6 +602,34 @@
       </div>
     </section>
 
+    <!-- SLIDE — CAP. 2: EMBEDDINGS NA PRÁTICA (demo ilustrativa) -->
+    <section class="slide" data-title="Embeddings na Prática" aria-roledescription="slide">
+      <div class="slide-inner">
+        <header class="slide-header reveal">
+          <span class="eyebrow"><span class="pill pill--cyan">Capítulo 2</span> Tokens &amp; Embeddings</span>
+          <h2>Embeddings na Prática: Comparando Frases</h2>
+        </header>
+
+        <div class="slide-body grid-2 grid-2--wide-left">
+          <div class="card reveal">
+            <h3 class="card-title"><span class="dot dot--violet"></span>Escolha uma frase de consulta</h3>
+            <div class="emc-sents" id="emc-sents" role="group" aria-label="Frases de exemplo"></div>
+            <p class="emc-vec" id="emc-vec"></p>
+            <p class="footnote">Exemplo ilustrativo: vetores de 4 dimensões inventados. Modelos reais usam centenas de dimensões.</p>
+          </div>
+
+          <div class="card card--accent-cyan reveal">
+            <h3 class="card-title"><span class="dot dot--cyan"></span>Similaridade de cosseno com as outras frases</h3>
+            <div class="emc-bars" id="emc-bars" aria-live="polite"></div>
+            <div class="formula formula--sm" aria-label="cosseno de theta igual a A escalar B dividido pela norma de A vezes a norma de B">
+              cos(θ) = <span class="frac"><span>A · B</span><span>‖A‖ ‖B‖</span></span>
+            </div>
+            <p class="small muted" id="emc-takeaway"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SLIDE — CAP. 3: COMO UM LLM GERA TEXTO (intro unificada) -->
     <section class="slide" data-title="Como um LLM Gera Texto" aria-roledescription="slide">
       <div class="slide-inner">
@@ -551,6 +648,7 @@
                   <img src="./assets/ch3_fig3-1_prompt_geracao.png" alt="Figura 3-1 do livro: um prompt pedindo um e-mail de desculpas entra em uma caixa Transformer LLM e sai o texto gerado." data-label="Figura 3-1 · Prompt → Transformer LLM → Generation" decoding="async" />
                 </div>
                 <figcaption>Figura 3-1 · prompt → LLM → texto gerado</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-1.</span>
               </figure>
           </div>
 
@@ -568,6 +666,7 @@
                   <img src="./assets/ch3_fig3-2_token_a_token.png" alt="Figura 3-2 do livro: o prompt entra no Transformer LLM e a saída aparece em degraus: Dear, Sarah, vírgula e quebra de linha." data-label="Figura 3-2 · Geração token a token (#1 a #4)" decoding="async" />
                 </div>
                 <figcaption>Figura 3-2 · um token por vez</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-2.</span>
               </figure>
           </div>
 
@@ -579,6 +678,7 @@
                   <img src="./assets/ch3_fig3-3_anexa_e_repete.png" alt="Figura 3-3 do livro: duas linhas mostram o prompt gerando Dear; depois Dear é anexado ao prompt e o modelo gera Sarah." data-label="Figura 3-3 · Token anexado ao prompt (Dear → Sarah)" decoding="async" />
                 </div>
                 <figcaption>Figura 3-3 · anexa o token e repete</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-3.</span>
               </figure>
           </div>
         </div>
@@ -621,6 +721,7 @@
                      data-label="Figura 3-4 · Tokenizer + Stack of Transformer blocks + LM head" decoding="async" />
               </div>
               <figcaption>Um Transformer LLM é feito de tokenizador, pilha de blocos Transformer e LM head</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-4.</span>
             </figure>
 
             <div class="card card--accent-cyan reveal">
@@ -649,6 +750,7 @@
                   <img src="./assets/ch3_fig3-6_lm_head_probabilidades.png" alt="Figura 3-6 do livro: a LM head do Transformer LLM liga a uma tabela de tokens com IDs e as probabilidades de cada um, como Dear com 40%." data-label="Figura 3-6 · LM head → probabilidade de cada token" decoding="async" />
                 </div>
                 <figcaption>Figura 3-6 · uma probabilidade por token do vocabulário</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-6.</span>
               </figure>
           </div>
 
@@ -660,6 +762,7 @@
                   <img src="./assets/ch3_fig3-7_estrategia_decodificacao.png" alt="Figura 3-7 do livro: o Transformer LLM gera probabilidades (Dear 40%, Title 13%, To 8%, Hi 2%) e a estratégia de decodificação escolhe o token Dear." data-label="Figura 3-7 · Probabilidades → estratégia de decodificação → “Dear”" decoding="async" />
                 </div>
                 <figcaption>Figura 3-7 · a decodificação decide qual token sai</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-7.</span>
               </figure>
           </div>
 
@@ -696,6 +799,7 @@
                   <img src="./assets/ch3_fig3-8_fluxos_por_token.png" alt="Figura 3-8 do livro: os tokens Write, Explain, how, it, happen, ##ed e ponto saem do tokenizador e cada um atravessa a pilha de blocos Transformer em seu próprio fluxo." data-label="Figura 3-8 · Cada token em seu próprio fluxo" decoding="async" />
                 </div>
                 <figcaption>Figura 3-8 · cada token tem seu fluxo de computação</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-8.</span>
               </figure>
           </div>
 
@@ -707,6 +811,7 @@
                   <img src="./assets/ch3_fig3-9_vetores_entrada_saida.png" alt="Figura 3-9 do livro: cada fluxo recebe um vetor de embedding azul e produz um vetor de saída laranja do mesmo tamanho; só o último fluxo, em azul-claro, segue para a LM head." data-label="Figura 3-9 · Embeddings (entrada) e output vectors (saída)" decoding="async" />
                 </div>
                 <figcaption>Figura 3-9 · vetor de entrada → vetor de saída</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-9.</span>
               </figure>
           </div>
 
@@ -742,6 +847,7 @@
                   <img src="./assets/ch3_fig3-11_serie_de_blocos.png" alt="Figura 3-11 do livro: os tokens Say something smart viram embeddings, atravessam os blocos Transformer 1, 2 até N, e cada bloco entrega seu resultado ao seguinte." data-label="Figura 3-11 · Série de blocos Transformer" decoding="async" />
                 </div>
                 <figcaption>Figura 3-11 · cada bloco entrega o resultado ao próximo</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-11.</span>
               </figure>
           </div>
 
@@ -753,6 +859,7 @@
                   <img src="./assets/ch3_fig3-12_bloco_atencao_ffn.png" alt="Figura 3-12 do livro: o Transformer block ampliado mostra duas camadas empilhadas, Self-attention e Feedforward neural network." data-label="Figura 3-12 · Self-attention + Feedforward neural network" decoding="async" />
                 </div>
                 <figcaption>Figura 3-12 · autoatenção + feedforward</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-12.</span>
               </figure>
           </div>
         </div>
@@ -777,6 +884,7 @@
                   <img src="./assets/ch3_fig3-13_feedforward_shawshank.png" alt="Figura 3-13 do livro: os tokens The e Shawshank atravessam os blocos Transformer, com a rede feedforward em destaque, e a LM head produz Redemption." data-label="Figura 3-13 · “The Shawshank” → Feedforward → “Redemption”" decoding="async" />
                 </div>
                 <figcaption>Figura 3-13 · a feedforward guarda a maior parte da memorização e interpolação</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-13.</span>
               </figure>
           </div>
 
@@ -812,6 +920,7 @@
                   <img src="./assets/ch3_fig3-14_atencao_it.png" alt="Figura 3-14 do livro: na frase The dog chased the squirrel because it, uma seta laranja liga o token it ao token squirrel dentro do bloco Transformer." data-label="Figura 3-14 · “it” olha para “squirrel”" decoding="async" />
                 </div>
                 <figcaption>Figura 3-14 · a atenção traz informação de posições anteriores</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-14.</span>
               </figure>
           </div>
 
@@ -823,6 +932,7 @@
                   <img src="./assets/ch3_fig3-15_atencao_simplificada.png" alt="Figura 3-15 do livro: a caixa Self-attention recebe as outras posições da sequência e a posição atual (seta rosa) e devolve a posição atual enriquecida com informação do contexto." data-label="Figura 3-15 · Atenção simplificada" decoding="async" />
                 </div>
                 <figcaption>Figura 3-15 · visão simplificada da atenção</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-15.</span>
               </figure>
           </div>
 
@@ -837,6 +947,7 @@
                   <img src="./assets/ch3_fig3-17_cabeca_de_atencao.png" alt="Figura 3-17 do livro: dentro da camada Self-attention, uma attention head contém as etapas Relevance scoring e Combining information." data-label="Figura 3-17 · Attention head: relevance scoring + combining" decoding="async" />
                 </div>
                 <figcaption>Figura 3-17 · repetir a atenção em paralelo (várias cabeças)</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-17.</span>
               </figure>
           </div>
         </div>
@@ -880,12 +991,14 @@
                   <img src="./assets/ch3_fig3-20_pontuacao_relevancia.png" alt="Figura 3-20 do livro: a Query da posição atual multiplicada pela matriz Keys resulta nos Relevance scores de cada token anterior (Sarah 3%, fed 5%, the 35%, cat 50%, because 2%, it 5%)." data-label="Figura 3-20 · Query × Keys = Relevance scores" decoding="async" />
                 </div>
                 <figcaption>Figura 3-20 · Query × Keys = pontuação de relevância</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-20.</span>
               </figure>
               <figure class="figure">
                 <div class="figure-frame">
                   <img src="./assets/ch3_fig3-21_combinando_informacao.png" alt="Figura 3-21 do livro: cada vetor Value é multiplicado pela pontuação de relevância do seu token e os resultados são somados em um único vetor de saída." data-label="Figura 3-21 · Scores × Values = Sum" decoding="async" />
                 </div>
                 <figcaption>Figura 3-21 · scores × Values, somados em um vetor</figcaption>
+                <span class="fig-src">Fonte: Alammar &amp; Grootendorst (2024), Hands-On LLMs, Fig. 3-21.</span>
               </figure>
             </div>
 
@@ -953,7 +1066,7 @@
     <section class="slide pipe-slide" data-title="Pipeline Completo" aria-roledescription="slide">
       <div class="slide-inner">
         <header class="slide-header reveal">
-          <span class="eyebrow"><span class="pill">Conclusão</span> Do prompt à resposta</span>
+          <span class="eyebrow"><span class="pill">Resumo</span> Do prompt à resposta</span>
           <h2>O Pipeline Completo de um LLM</h2>
         </header>
 
@@ -973,7 +1086,53 @@
       </div>
     </section>
 
-  </main>
+    <!-- SLIDE — PRÁTICA 5G: LIMIAR DE LATÊNCIA -->
+    <section class="slide" data-title="Prática 5G: Limiar de Latência" aria-roledescription="slide">
+      <div class="slide-inner">
+        <header class="slide-header reveal">
+          <span class="eyebrow"><span class="pill pill--mix">Prática</span> Redes 5G · Open RAN</span>
+          <h2>Houve Violação do Limiar de Latência?</h2>
+        </header>
+
+        <div class="slide-body grid-2">
+          <div class="stack">
+            <div class="card reveal">
+              <h3 class="card-title"><span class="dot dot--violet"></span>O cenário</h3>
+              <p>Um <strong>xApp</strong> coleta métricas <strong>KPM</strong> (Key Performance Measurement) por UE. Cada linha de log chega em texto, por exemplo <em>“UE 123: latência de 63 ms, acima do limiar de 50 ms”</em>. A pergunta: <em>“houve violação do limiar de latência ou não?”</em></p>
+            </div>
+            <div class="card thr reveal">
+              <h3 class="card-title"><span class="dot dot--cyan"></span>Trace do UE 123 <span class="muted">(dados sintéticos)</span></h3>
+              <div class="seg-tabs" role="group" aria-label="Limiar de latência">
+                <button type="button" class="seg-tab" data-thr="30" aria-pressed="false">30 ms</button>
+                <button type="button" class="seg-tab is-active" data-thr="50" aria-pressed="true">50 ms</button>
+                <button type="button" class="seg-tab" data-thr="70" aria-pressed="false">70 ms</button>
+              </div>
+              <div class="thr-trace" id="thr-trace" aria-label="Latência por amostra"></div>
+              <p class="thr-answer" id="thr-answer" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <div class="card card--accent-cyan reveal">
+            <h3 class="card-title"><span class="dot dot--cyan"></span>Três formas de responder</h3>
+            <div class="mini-card">
+              <span class="mini-label">① Regra (baseline)</span>
+              <p>Compara o número com o limiar. Simples e exata: serve de <strong>gabarito</strong>.</p>
+            </div>
+            <div class="mini-card is-featured">
+              <span class="mini-label">② LLM pré-treinado por prompt</span>
+              <p>Coloca a linha de log e a pergunta e deixa o modelo responder “Sim” ou “Não”.</p>
+            </div>
+            <div class="mini-card">
+              <span class="mini-label">③ Embeddings + classificador</span>
+              <p>Transforma cada linha de log em vetor e treina um classificador simples.</p>
+            </div>
+            <p class="footnote">Ideia: comparar ② e ③ com o gabarito ① e ver onde cada um acerta ou erra.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    </main>
 
   <!-- ===== Lightbox / Modal de Zoom para Imagens ===== -->
   <dialog class="lightbox" id="lightbox" aria-label="Visualizador de imagem ampliada">

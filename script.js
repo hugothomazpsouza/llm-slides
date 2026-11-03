@@ -243,7 +243,7 @@
     const resetEl = document.getElementById("loop-reset");
     if (!seqEl) return;
 
-    const prompt = ["Modelos", " gerativos", " preveem", " um"];
+    const prompt = ["Modelos", " generativos", " preveem", " um"];
     const steps = [
       { pick: " token", top: [[" token", 0.78], [" valor", 0.08], [" texto", 0.05]] },
       { pick: " por", top: [[" por", 0.71], [" de", 0.12], [" a", 0.06]] },
@@ -637,6 +637,197 @@
 
     build();
     render();
+  })();
+
+  /* =============================================================
+     NOVOS SLIDES — demos ilustrativas (dados inventados)
+  ============================================================= */
+  const setPressed = (btns, on) => btns.forEach((b) => {
+    const a = on(b);
+    b.classList.toggle("is-active", a);
+    b.setAttribute("aria-pressed", String(a));
+  });
+
+  /* ---- Tokenizadores diferentes ---- */
+  (function tokenizerCompare() {
+    const rowsEl = document.getElementById("tkc-rows");
+    const inputEl = document.getElementById("tkc-input");
+    const takeEl = document.getElementById("tkc-takeaway");
+    const tabs = Array.from(document.querySelectorAll("[data-sample]"));
+    if (!rowsEl) return;
+    const HUES = [215, 262, 160, 200, 330, 40, 280];
+    const ROWS = [
+      { id: "wp", name: "WordPiece (estilo BERT)", sub: "minúsculas · sem espaços" },
+      { id: "bpe", name: "BPE de uso geral", sub: "o espaço faz parte do token" },
+      { id: "code", name: "Tokenizador de código", sub: "palavras-chave e indentação" },
+    ];
+    const S = {
+      code: {
+        input: "if latencia > 50:\n    alerta()",
+        wp: [["if"], ["late"], ["##ncia"], [">"], ["50"], [":"], ["alert"], ["##a"], ["("], [")"], ["∅ indentação", "lost"]],
+        bpe: [["if"], ["·lat"], ["encia"], ["·>"], ["·"], ["50"], [":"], ["⏎"], ["·"], ["·"], ["·"], ["·"], ["alert"], ["a"], ["()"]],
+        code: [["if", "kw"], ["·latencia"], ["·>"], ["·50"], [":"], ["⏎····", "indent"], ["alerta"], ["()"]],
+        best: "code",
+        take: "No tokenizador de código, a palavra-chave <strong>if</strong> e a <strong>indentação</strong> viram tokens únicos: 8 tokens e a estrutura preservada. No WordPiece a indentação some; no BPE geral ela vira 4 tokens de espaço.",
+      },
+      text: {
+        input: "O xApp do RIC otimiza a célula 5G",
+        wp: [["o"], ["xa"], ["##pp"], ["do"], ["ric"], ["ot"], ["##imiza"], ["a"], ["cel"], ["##ula"], ["5"], ["##g"]],
+        bpe: [["O"], ["·x"], ["App"], ["·do"], ["·R"], ["IC"], ["·ot"], ["imiza"], ["·a"], ["·c"], ["élula"], ["·5"], ["G"]],
+        code: [["O"], ["·x"], ["App"], ["·do"], ["·R"], ["IC"], ["·o"], ["tim"], ["iza"], ["·a"], ["·c"], ["é"], ["lula"], ["·5"], ["G"]],
+        best: "wp",
+        take: "Em texto técnico em português, o tokenizador de código gera <strong>mais tokens</strong> (15): especializar tem custo fora do domínio. Termos como xApp e RIC são quebrados em todos os casos.",
+      },
+      num: {
+        input: "latência=52.7ms 😀",
+        wp: [["late"], ["##ncia"], ["="], ["52"], ["."], ["7"], ["##ms"], ["[UNK]", "unk"]],
+        bpe: [["lat"], ["ência"], ["="], ["52"], ["."], ["7"], ["ms"], ["·"], ["‹F0›", "byte"], ["‹9F›", "byte"], ["‹98›", "byte"], ["‹80›", "byte"]],
+        code: [["latência"], ["="], ["5"], ["2"], ["."], ["7"], ["ms"], ["·"], ["😀"]],
+        best: "code",
+        take: "Números e emoji dependem do vocabulário: o emoji vira <strong>[UNK]</strong> ou bytes soltos, e o número pode ser quebrado em <strong>dígitos</strong> (5, 2, ., 7).",
+      },
+    };
+
+    function render(key) {
+      const s = S[key];
+      inputEl.textContent = s.input;
+      rowsEl.innerHTML = "";
+      ROWS.forEach((r) => {
+        const toks = s[r.id];
+        const n = toks.filter((t) => t[1] !== "lost").length;
+        const row = document.createElement("div");
+        row.className = "tkc-row" + (r.id === s.best ? " is-best" : "");
+        const name = document.createElement("div");
+        name.className = "tkc-name";
+        name.innerHTML = `${r.name}<small>${r.sub}</small>`;
+        const chips = document.createElement("div");
+        chips.className = "tkc-chips";
+        let k = 0;
+        toks.forEach(([text, cls]) => {
+          const c = document.createElement("span");
+          c.className = "tk" + (cls ? " tk--" + cls : "");
+          c.style.setProperty("--h", HUES[k % HUES.length]);
+          c.style.setProperty("--k", k);
+          c.textContent = text;
+          chips.append(c);
+          if (cls !== "lost") k++;
+        });
+        const count = document.createElement("div");
+        count.className = "tkc-count";
+        count.innerHTML = `${n}<small>tokens</small>`;
+        row.append(name, chips, count);
+        rowsEl.append(row);
+      });
+      takeEl.innerHTML = s.take;
+      setPressed(tabs, (b) => b.dataset.sample === key);
+    }
+    tabs.forEach((b) => b.addEventListener("click", () => render(b.dataset.sample)));
+    render("code");
+  })();
+
+  /* ---- Embeddings na prática: similaridade de cosseno ---- */
+  (function embeddingCompare() {
+    const sentsEl = document.getElementById("emc-sents");
+    const barsEl = document.getElementById("emc-bars");
+    const vecEl = document.getElementById("emc-vec");
+    const takeEl = document.getElementById("emc-takeaway");
+    if (!sentsEl) return;
+    const SENT = [
+      { t: "Latência alta na célula 5G", v: [0.90, 0.30, 0.20, 0.00] },
+      { t: "Atraso na transmissão do gNB", v: [0.85, 0.35, 0.25, 0.05] },
+      { t: "Throughput do UE abaixo do esperado", v: [0.60, 0.70, 0.20, 0.10] },
+      { t: "Handover falhou entre duas células", v: [0.50, 0.20, 0.85, 0.00] },
+      { t: "Reunião de planejamento do trimestre", v: [0.00, 0.10, 0.05, 0.95] },
+    ];
+    const dot = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+    const norm = (a) => Math.sqrt(dot(a, a));
+    const cos = (a, b) => dot(a, b) / (norm(a) * norm(b));
+    let sel = 0;
+
+    const btns = SENT.map((s, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "emc-sent";
+      b.textContent = s.t;
+      b.addEventListener("click", () => { sel = i; render(); });
+      sentsEl.append(b);
+      return b;
+    });
+
+    function render() {
+      btns.forEach((b, i) => b.classList.toggle("is-active", i === sel));
+      vecEl.textContent = "v = [" + SENT[sel].v.map((x) => x.toFixed(2)).join(", ") + "]";
+      const others = SENT.map((s, i) => ({ s, i, c: cos(SENT[sel].v, s.v) })).filter((o) => o.i !== sel).sort((a, b) => b.c - a.c);
+      barsEl.innerHTML = "";
+      others.forEach((o, rank) => {
+        const row = document.createElement("div");
+        row.className = "emc-row" + (rank === 0 ? " is-top" : "");
+        row.innerHTML = `<span class="t"></span><span class="emc-track"><i></i></span><span class="emc-val">${o.c.toFixed(2)}</span>`;
+        row.querySelector(".t").textContent = o.s.t;
+        barsEl.append(row);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          row.querySelector("i").style.width = Math.max(0, o.c) * 100 + "%";
+        }));
+      });
+      takeEl.innerHTML = `Mais próxima: <strong>“${others[0].s.t}”</strong> (${others[0].c.toFixed(2)}). O que conta é o significado, não as palavras exatas.`;
+    }
+    render();
+  })();
+
+  /* ---- Embeddings como entrada: o que é treinado ---- */
+  (function embeddingsAsInput() {
+    const chainEl = document.getElementById("eme-chain");
+    const textEl = document.getElementById("eme-text");
+    const tabs = Array.from(document.querySelectorAll("[data-eme]"));
+    if (!chainEl) return;
+    const STEPS = [
+      { name: "Texto", key: "in" },
+      { name: "Modelo de embeddings", key: "model" },
+      { name: "Vetor", key: "vec" },
+      { name: "Classificador simples", key: "head" },
+      { name: "Rótulo", key: "out" },
+    ];
+    const MODES = {
+      emb: {
+        model: ["is-frozen", "congelado"], head: ["is-train", "treinado"],
+        text: "Treinamos <strong>só o classificador</strong>: poucos parâmetros, treino rápido e barato. O modelo de embeddings já aprendeu a representar a linguagem e fica congelado.",
+      },
+      ft: {
+        model: ["is-train", "treinado"], head: ["is-train", "treinado"],
+        text: "Atualizamos o <strong>modelo inteiro</strong>: costuma exigir mais dados e mais GPU, mas ajusta a representação à tarefa.",
+      },
+    };
+    function render(key) {
+      const m = MODES[key];
+      chainEl.innerHTML = STEPS.map((s) => {
+        const st = m[s.key];
+        return `<div class="eme-box ${st ? st[0] : ""}">${s.name}${st ? `<small>${st[1]}</small>` : ""}</div>`;
+      }).join("");
+      textEl.innerHTML = m.text;
+      setPressed(tabs, (b) => b.dataset.eme === key);
+    }
+    tabs.forEach((b) => b.addEventListener("click", () => render(b.dataset.eme)));
+    render("emb");
+  })();
+
+  /* ---- Prática: limiar de latência (gabarito pela regra) ---- */
+  (function thresholdDemo() {
+    const traceEl = document.getElementById("thr-trace");
+    const ansEl = document.getElementById("thr-answer");
+    const tabs = Array.from(document.querySelectorAll("[data-thr]"));
+    if (!traceEl) return;
+    const LAT = [38, 41, 47, 63, 52, 44];
+    function render(th) {
+      traceEl.innerHTML = LAT.map((v, i) =>
+        `<div class="thr-cell${v > th ? " is-over" : ""}"><small>t=${i}s</small><b>${v}</b><small>ms</small></div>`).join("");
+      const over = LAT.filter((v) => v > th);
+      ansEl.innerHTML = over.length
+        ? `Resposta pela regra: <strong>Sim</strong>. ${over.length} de ${LAT.length} amostras acima de ${th} ms (pico de ${Math.max(...LAT)} ms).`
+        : `Resposta pela regra: <strong>Não</strong>. Nenhuma amostra acima de ${th} ms (pico de ${Math.max(...LAT)} ms).`;
+      setPressed(tabs, (b) => Number(b.dataset.thr) === th);
+    }
+    tabs.forEach((b) => b.addEventListener("click", () => render(Number(b.dataset.thr))));
+    render(50);
   })();
 
   /* ---------- Inicialização ---------- */
